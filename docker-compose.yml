@@ -1,22 +1,22 @@
 services:
   wordpress:
-    image: wordpress:6.6.2-php8.2-apache # https://hub.docker.com/_/wordpress/
+    image: wordpress:6.7.2-php8.3-apache
     ports:
-      - ${IP}:${PORT}:80 # change ip if required
+      - "${IP}:${PORT}:80" # Ensure that IP and PORT are set in .env or environment variables
     volumes:
       - ./config/wp_php.ini:/usr/local/etc/php/conf.d/conf.ini
-      - ./wp-app:/var/www/html # Full wordpress project
+      - ./wp-app:/var/www/html # Full WordPress project
       #- ./plugin-name/trunk/:/var/www/html/wp-content/plugins/plugin-name # Plugin development
       #- ./theme-name/trunk/:/var/www/html/wp-content/themes/theme-name # Theme development
     environment:
-      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_HOST: wordpress-mariadb
       WORDPRESS_DB_NAME: "${DB_NAME}"
       WORDPRESS_DB_USER: root
       WORDPRESS_DB_PASSWORD: "${DB_ROOT_PASSWORD}"
     depends_on:
-      - wordpress-mysql
-    links:
-      - wordpress-mysql
+      - wordpress-mariadb
+    networks:
+      - wordpress_network
 
   wordpress-cli:
     image: wordpress:cli
@@ -29,17 +29,18 @@ services:
       WORDPRESS_DB_USER: root
       WORDPRESS_DB_PASSWORD: "${DB_ROOT_PASSWORD}"
     depends_on:
-      - wordpress-mysql
+      - wordpress-mariadb
       - wordpress
+    networks:
+      - wordpress_network
 
-  wordpress-mysql:
-    image: mysql:8.4 # https://hub.docker.com/_/mysql/ - or mariadb https://hub.docker.com/_/mariadb
-    # platform: linux/x86_64  # Uncomment if your machine is running on arm (ex: Apple Silicon processor)
+  wordpress-mariadb:
+    image: mariadb:10.5
     ports:
-      - ${IP}:3306:3306 # change ip if required
+      - "${IP}:3306:3306"
     command: [
-        '--character-set-server=utf8mb4',
-        '--collation-server=utf8mb4_unicode_ci'
+      '--character-set-server=utf8mb4',
+      '--collation-server=utf8mb4_unicode_ci'
     ]
     volumes:
       - ./wp-data:/docker-entrypoint-initdb.d
@@ -47,6 +48,12 @@ services:
     environment:
       MYSQL_DATABASE: "${DB_NAME}"
       MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+    networks:
+      - wordpress_network
+
+networks:
+  wordpress_network:
+    driver: bridge
 
 volumes:
   db_data:
