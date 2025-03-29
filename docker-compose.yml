@@ -1,6 +1,6 @@
 services:
   wordpress:
-    image: wordpress:latest # https://hub.docker.com/_/wordpress/
+    image: wordpress:6.6.2-php8.2-apache # https://hub.docker.com/_/wordpress/
     ports:
       - ${IP}:${PORT}:80 # change ip if required
     volumes:
@@ -33,7 +33,7 @@ services:
       - wp
 
   wordpress-mysql:
-    image: mysql:latest # https://hub.docker.com/_/mysql/ - or mariadb https://hub.docker.com/_/mariadb
+    image: mysql:8.4 # https://hub.docker.com/_/mysql/ - or mariadb https://hub.docker.com/_/mariadb
     # platform: linux/x86_64  # Uncomment if your machine is running on arm (ex: Apple Silicon processor)
     ports:
       - ${IP}:3306:3306 # change ip if required
