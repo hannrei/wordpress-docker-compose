@@ -35,7 +35,7 @@ services:
       - wordpress_network
 
   wordpress-mariadb:
-    image: mariadb:10.5
+    image: mariadb:11.7
     ports:
       - "${IP}:3306:3306"
     command: [
