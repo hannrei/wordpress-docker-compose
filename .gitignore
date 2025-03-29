@@ -1,2 +1,5 @@
 .env
 .idea
+wp-app
+wp-content
+wp-data
