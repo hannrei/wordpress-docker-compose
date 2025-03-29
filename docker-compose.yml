@@ -1,7 +1,5 @@
-version: '3'
-
 services:
-  wp:
+  wordpress:
     image: wordpress:latest # https://hub.docker.com/_/wordpress/
     ports:
       - ${IP}:${PORT}:80 # change ip if required
@@ -20,7 +18,7 @@ services:
     links:
       - db
 
-  wpcli:
+  wordpress-cli:
     image: wordpress:cli
     volumes:
       - ./config/wp_php.ini:/usr/local/etc/php/conf.d/conf.ini
@@ -34,23 +32,7 @@ services:
       - db
       - wp
 
-  pma:
-    image: phpmyadmin:latest  # https://hub.docker.com/_/phpmyadmin
-    environment:
-      # https://docs.phpmyadmin.net/en/latest/setup.html#docker-environment-variables
-      PMA_HOST: db
-      PMA_PORT: 3306
-      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
-      UPLOAD_LIMIT: 50M
-    ports:
-      - ${IP}:8080:80
-    links:
-      - db:db
-    volumes:
-     - ./config/pma_php.ini:/usr/local/etc/php/conf.d/conf.ini
-     - ./config/pma_config.php:/etc/phpmyadmin/config.user.inc.php
-
-  db:
+  wordpress-mysql:
     image: mysql:latest # https://hub.docker.com/_/mysql/ - or mariadb https://hub.docker.com/_/mariadb
     # platform: linux/x86_64  # Uncomment if your machine is running on arm (ex: Apple Silicon processor)
     ports:

@@ -5,7 +5,6 @@ Easy WordPress development with Docker and Docker Compose.
 With this project you can quickly run the following:
 
 - [WordPress and WP CLI](https://hub.docker.com/_/wordpress/)
-- [phpMyAdmin](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
 - [MySQL](https://hub.docker.com/_/mysql/)
 
 Contents:
